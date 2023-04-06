@@ -51,6 +51,10 @@ RUN mkdir -p ${DIROPENGROK}/data && \
     opengrok-deploy -c ${DIROPENGROK}/etc/configuration.xml ${DIROPENGROK}/dist/lib/source.war ${DIRWEBAPP} && \
     rm -f ${SRCPKG}
 
+# Clean repositories
+RUN apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy source
 COPY src /klab
 RUN cp -f /klab/scripts/index-xrefs.sh /usr/local/bin/index-xrefs
@@ -58,4 +62,5 @@ RUN cp -f /klab/scripts/index-xrefs.sh /usr/local/bin/index-xrefs
 USER root
 WORKDIR /root
 
-CMD [ "/klab/init.sh" ]
+# Run entrypoint
+ENTRYPOINT [ "/klab/init.sh" ]
